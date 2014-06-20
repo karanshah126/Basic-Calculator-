@@ -9,19 +9,24 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.*;
 
 public class AppTest1 extends JFrame{
 
 	JPanel mainPanel;
-	JButton equalButton,addButton,subButton,multiplyButton,divideButton,resetButton,sqrtButton,answerButton;
+	JFrame mainFrame;
+	JButton equalButton,addButton,subButton,multiplyButton,divideButton,resetButton,sqrtButton,answerButton,exitButton;
 	JTextField textField;
     JButton kgLbButton,lbKgButton,kmMlButton,mlKmButton;
 	
 	char operator='0';
 	double num1=0,num2=0,answer=0;
-	int check=0;
+	int check=0,posX=0,posY=0;
+	Point mouseDownCompCoords = null;
 
 	
 	
@@ -33,58 +38,101 @@ public class AppTest1 extends JFrame{
 	
 	public AppTest1()
 	{
-		this.setSize(279, 338);
-		this.setLocationRelativeTo(null);
+		mainFrame= new JFrame();
+		mainFrame.setUndecorated(true);
+		mainFrame.setSize(279, 338);
+		mainFrame.setLocationRelativeTo(null);
+		 mouseDownCompCoords = null;
+		 
+		mainFrame.setResizable(false);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setTitle("Calculator");
 		
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Calculator");
+	    
 		mainPanel=new JPanel();
-		mainPanel.setBackground(new Color(0, 153, 204));
+		mainPanel.setBackground(new Color(0, 0, 102));
 		
 		
 		ListenForButton buttonListen = new ListenForButton();
 		
+		
 		equalButton=new JButton("=");
-		equalButton.setForeground(new Color(51, 0, 255));
-		equalButton.setBackground(new Color(135, 206, 250));
+		equalButton.setForeground(new Color(255, 255, 255));
+		equalButton.setBackground(new Color(0, 153, 153));
 		equalButton.setBounds(141, 121, 112, 40);
 		equalButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		addButton=new JButton("+");
-		addButton.setForeground(new Color(51, 0, 255));
-		addButton.setBackground(new Color(135, 206, 250));
-		addButton.setBounds(17, 64, 50, 40);
+		addButton.setForeground(new Color(255, 255, 255));
+		addButton.setBackground(new Color(0, 153, 153));
+		addButton.setBounds(17, 68, 50, 40);
 		addButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		subButton=new JButton("-");
-		subButton.setForeground(new Color(51, 0, 255));
-		subButton.setBackground(new Color(135, 206, 250));
-		subButton.setBounds(79, 64, 50, 40);
+		subButton.setForeground(new Color(255, 255, 255));
+		subButton.setBackground(new Color(0, 153, 153));
+		subButton.setBounds(79, 68, 50, 40);
 		subButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		multiplyButton=new JButton("x");
-		multiplyButton.setForeground(new Color(51, 0, 255));
-		multiplyButton.setBackground(new Color(135, 206, 250));
-		multiplyButton.setBounds(141, 64, 50, 40);
+		multiplyButton.setForeground(new Color(255, 255, 255));
+		multiplyButton.setBackground(new Color(0, 153, 153));
+		multiplyButton.setBounds(141, 68, 50, 40);
 		multiplyButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		divideButton=new JButton("/");
-		divideButton.setForeground(new Color(51, 0, 255));
-		divideButton.setBackground(new Color(135, 206, 250));
-		divideButton.setBounds(203, 64, 50, 40);
+		divideButton.setForeground(new Color(255, 255, 255));
+		divideButton.setBackground(new Color(0, 153, 153));
+		divideButton.setBounds(203, 68, 50, 40);
 		divideButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		sqrtButton=new JButton("sq. root");
-		sqrtButton.setForeground(new Color(51, 0, 255));
-		sqrtButton.setBackground(new Color(135, 206, 250));
+		sqrtButton.setForeground(new Color(255, 255, 255));
+		sqrtButton.setBackground(new Color(0, 153, 153));
 		sqrtButton.setBounds(16, 121, 114, 40);
 		sqrtButton.setFont(new Font("Tahoma", Font.BOLD, 19));
 		resetButton=new JButton("RESET");
-		resetButton.setForeground(new Color(51, 0, 255));
-		resetButton.setBackground(new Color(135, 206, 250));
+		resetButton.setForeground(new Color(255, 255, 255));
+		resetButton.setBackground(new Color(0, 153, 153));
 		resetButton.setBounds(141, 174, 112, 40);
 		resetButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		answerButton=new JButton("ANSWER");
-		answerButton.setForeground(new Color(51, 0, 255));
-		answerButton.setBackground(new Color(135, 206, 250));
+		answerButton.setForeground(new Color(255, 255, 255));
+		answerButton.setBackground(new Color(0, 153, 153));
 		answerButton.setBounds(17, 174, 114, 40);
 		answerButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		exitButton=new JButton("EXIT");
+		exitButton.setForeground(new Color(255, 255, 255));
+		exitButton.setBackground(new Color(0, 153, 153));
+		exitButton.setBounds(79, 297, 114, 28);
+		exitButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		
+		
+
+		
+		textField=new JTextField("0",15);
+		textField.setBackground(new Color(255, 255, 255));
+		textField.setForeground(new Color(0, 51, 204));
+		textField.setBounds(16, 23, 237, 28);
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		textField.selectAll();
+		
+		kgLbButton = new JButton("Kg. --> lb.");
+		kgLbButton.setForeground(new Color(255, 255, 255));
+		kgLbButton.setBackground(new Color(0, 153, 153));
+		kgLbButton.setBounds(16, 227, 116, 25);
+		kgLbButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lbKgButton = new JButton("lb. --> Kg.");
+		lbKgButton.setForeground(new Color(255, 255, 255));
+		lbKgButton.setBackground(new Color(0, 153, 153));
+		lbKgButton.setBounds(16, 265, 116, 25);
+		lbKgButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		kmMlButton = new JButton("Km. --> ml.");
+		kmMlButton.setForeground(new Color(255, 255, 255));
+		kmMlButton.setBackground(new Color(0, 153, 153));
+		kmMlButton.setBounds(143, 265, 110, 25);
+		kmMlButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		mlKmButton = new JButton("ml. --> Km.");
+		mlKmButton.setForeground(new Color(255, 255, 255));
+		mlKmButton.setBackground(new Color(0, 153, 153));
+		mlKmButton.setBounds(143, 227, 110, 25);
+		mlKmButton.setFont(new Font("Tahoma", Font.BOLD, 13));
+		
 		
 		equalButton.addActionListener(buttonListen);
 		addButton.addActionListener(buttonListen);
@@ -94,38 +142,12 @@ public class AppTest1 extends JFrame{
 		sqrtButton.addActionListener(buttonListen);
 		resetButton.addActionListener(buttonListen);
 		answerButton.addActionListener(buttonListen);
-		
-		textField=new JTextField("0",15);
-		textField.setForeground(new Color(51, 0, 255));
-		textField.setBounds(16, 23, 237, 28);
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		textField.selectAll();
-		
-		kgLbButton = new JButton("Kg. --> lb.");
-		kgLbButton.setForeground(new Color(51, 0, 255));
-		kgLbButton.setBackground(new Color(135, 206, 250));
-		kgLbButton.setBounds(16, 227, 116, 25);
-		kgLbButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lbKgButton = new JButton("lb. --> Kg.");
-		lbKgButton.setForeground(new Color(51, 0, 255));
-		lbKgButton.setBackground(new Color(135, 206, 250));
-		lbKgButton.setBounds(16, 265, 116, 25);
-		lbKgButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		kmMlButton = new JButton("Km. --> ml.");
-		kmMlButton.setForeground(new Color(51, 0, 255));
-		kmMlButton.setBackground(new Color(135, 206, 250));
-		kmMlButton.setBounds(143, 265, 110, 25);
-		kmMlButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		mlKmButton = new JButton("ml. --> Km.");
-		mlKmButton.setForeground(new Color(51, 0, 255));
-		mlKmButton.setBackground(new Color(135, 206, 250));
-		mlKmButton.setBounds(143, 227, 110, 25);
-		mlKmButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		
+		exitButton.addActionListener(buttonListen);
 		kgLbButton.addActionListener(buttonListen);
 		lbKgButton.addActionListener(buttonListen);
 		kmMlButton.addActionListener(buttonListen);
 		mlKmButton.addActionListener(buttonListen);
+		
 		
 		mainPanel.setLayout(null);
 		mainPanel.add(textField);
@@ -137,18 +159,47 @@ public class AppTest1 extends JFrame{
 		mainPanel.add(equalButton);
 		mainPanel.add(resetButton);
 		mainPanel.add(answerButton);
+		mainPanel.add(exitButton);
 		mainPanel.add(kgLbButton);
 		mainPanel.add(lbKgButton);
 		mainPanel.add(kmMlButton);
-		
-	
 		mainPanel.add(mlKmButton);
 		
-		getContentPane().add(mainPanel);
 		
+		
+	  
+
+	  
+	    
 	
-		
-		this.setVisible(true);
+	mainFrame.add(mainPanel);
+	
+	mainFrame.addMouseListener(new MouseListener(){
+        public void mouseReleased(MouseEvent e) {
+            mouseDownCompCoords = null;
+        }
+        public void mousePressed(MouseEvent e) {
+            mouseDownCompCoords = e.getPoint();
+        }
+        public void mouseExited(MouseEvent e) {
+        }
+        public void mouseEntered(MouseEvent e) {
+        }
+        public void mouseClicked(MouseEvent e) {
+        }
+    });
+
+    mainFrame.addMouseMotionListener(new MouseMotionListener(){
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        public void mouseDragged(MouseEvent e) {
+            Point currCoords = e.getLocationOnScreen();
+            mainFrame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+        }
+    });
+	
+		mainFrame.setVisible(true);
 		
 		
 	}
@@ -228,7 +279,7 @@ public class AppTest1 extends JFrame{
 
 class ListenForButton implements ActionListener{
     
-	    // This method is called when an event occurs
+	    // mainFrame method is called when an event occurs
 	
     
 	    public void actionPerformed(ActionEvent e){
@@ -320,6 +371,11 @@ class ListenForButton implements ActionListener{
 	        	textField.setText(answer+"");
 	        }
 	        
+	        if(e.getSource() == exitButton)
+	        {	
+	        	System.exit(0);
+	        }
+	        
 	        if(e.getSource() == kmMlButton  && isNumeric() == true)
 	        	
 	        {
@@ -345,5 +401,8 @@ class ListenForButton implements ActionListener{
 	        }
 	    }
 
-}	
+}
+
+
+
 }
